@@ -1,11 +1,11 @@
 class MoDiary {
   int id;
-  String type;
+  String userName;
   String enterCode;
 
-  MoDiary({required this.id, required this.type, required this.enterCode});
+  MoDiary({required this.id, required this.userName, required this.enterCode});
   @override
   String toString() {
-    return 'id : $id  name : $type  password : $enterCode';
+    return 'id : $id  name : $userName  password : $enterCode';
   }
 }

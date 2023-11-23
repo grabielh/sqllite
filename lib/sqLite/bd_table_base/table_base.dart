@@ -5,7 +5,7 @@ List get modelsTable => [
       _createTable(
           diaryTable,
           'id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, '
-          'type TEXT, '
+          'user TEXT, '
           'enterCode TEXT'),
       _createTable(
           pageTable,

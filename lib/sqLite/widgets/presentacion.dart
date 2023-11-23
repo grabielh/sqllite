@@ -22,7 +22,7 @@ class _CrudDiaryState extends State<CrudDiary> {
   void initState() {
     super.initState();
     serviceDiary =
-        ServiceDiary(moDiary: MoDiary(id: 0, type: '', enterCode: ''));
+        ServiceDiary(moDiary: MoDiary(id: 0, userName: '', enterCode: ''));
   }
 
   void _insertarDatosDiary() async {
@@ -34,7 +34,7 @@ class _CrudDiaryState extends State<CrudDiary> {
         String name = _nameDiary.text;
         String password = _password.text;
         ServiceDiary serviceDiary = ServiceDiary(
-            moDiary: MoDiary(id: id, type: name, enterCode: password));
+            moDiary: MoDiary(id: id, userName: name, enterCode: password));
 
         var lisDiary = await serviceDiary.save();
 
@@ -169,7 +169,7 @@ class _CrudDiaryState extends State<CrudDiary> {
                     child: Row(
                       children: [
                         Text(diary.id.toString()),
-                        Text(diary.type),
+                        Text(diary.userName),
                         Text(diary.enterCode)
                       ],
                     ),

@@ -9,14 +9,14 @@ class ServiceDiary extends DiaryGateway {
   // Método para convertir un mapa a un objeto ServiceDiary
   MoDiary toObject(Map<String, dynamic> data) {
     return MoDiary(
-        id: data['id'], type: data['type'], enterCode: data['enterCode']);
+        id: data['id'], userName: data['type'], enterCode: data['enterCode']);
   }
 
   // Método para convertir un objeto ServiceDiary a un mapa
   Map<String, dynamic> toMap() {
     return {
       'id': moDiary.id,
-      'type': moDiary.type,
+      'type': moDiary.userName,
       'enterCode': moDiary.enterCode
     };
   }
