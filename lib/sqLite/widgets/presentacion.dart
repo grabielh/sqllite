@@ -38,6 +38,7 @@ class _CrudDiaryState extends State<CrudDiary> {
             moDiary: MoDiary(id: id, userName: name, enterCode: password));
 
         await serviceDiary.save();
+        FocusScope.of(context).unfocus();
 
         setState(() {
           serviceDiary.getDiaries();
