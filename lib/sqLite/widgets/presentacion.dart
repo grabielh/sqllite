@@ -1,6 +1,7 @@
 // ignore_for_file: use_build_context_synchronously
 
 import 'package:flutter/material.dart';
+import 'package:gap/gap.dart';
 import 'package:sqllite/sqLite/dominio/models/models_diary.dart';
 import 'package:sqllite/sqLite/infraestructura/service/service_diary.dart';
 
@@ -36,9 +37,8 @@ class _CrudDiaryState extends State<CrudDiary> {
         ServiceDiary serviceDiary = ServiceDiary(
             moDiary: MoDiary(id: id, userName: name, enterCode: password));
 
-        var lisDiary = await serviceDiary.save();
+        await serviceDiary.save();
 
-        print(' ${lisDiary.toString()}');
         setState(() {
           serviceDiary.getDiaries();
         });
@@ -70,7 +70,7 @@ class _CrudDiaryState extends State<CrudDiary> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
-            _buildInput(context, _nameDiary, _password),
+            _buildInput(context, _id, _nameDiary, _password),
             const SizedBox(height: 20),
             _buildButton(context),
             const SizedBox(height: 20),
@@ -81,8 +81,8 @@ class _CrudDiaryState extends State<CrudDiary> {
     );
   }
 
-  Widget _buildInput(BuildContext context, TextEditingController nombre,
-      TextEditingController apellido) {
+  Widget _buildInput(BuildContext context, TextEditingController id,
+      TextEditingController userName, TextEditingController enterCode) {
     return Card(
       child: Padding(
         padding: const EdgeInsets.all(20),
@@ -90,19 +90,19 @@ class _CrudDiaryState extends State<CrudDiary> {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             TextField(
-              controller: _id,
+              controller: id,
               decoration: const InputDecoration(labelText: 'id'),
               keyboardType: TextInputType.number,
             ),
             TextField(
-              controller: nombre,
-              decoration: const InputDecoration(labelText: 'Nombre'),
+              controller: userName,
+              decoration: const InputDecoration(labelText: 'userName'),
               keyboardType: TextInputType.name,
             ),
             const SizedBox(height: 10),
             TextField(
-              controller: apellido,
-              decoration: const InputDecoration(labelText: 'Apellido'),
+              controller: enterCode,
+              decoration: const InputDecoration(labelText: 'enterCode'),
               keyboardType: TextInputType.name,
             ),
           ],
@@ -112,31 +112,23 @@ class _CrudDiaryState extends State<CrudDiary> {
   }
 
   Widget _buildButton(BuildContext context) {
-    return Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-      Visibility(
-        visible: !visible,
+    return Container(
+      padding: const EdgeInsets.all(15),
+      alignment: Alignment.center,
+      child: SizedBox(
+        width: 400,
         child: ElevatedButton(
           onPressed: () {
             // Lógica para crear/actualizar un registro Diary
             _insertarDatosDiary();
           },
-          child: const Text('Update Diary'),
+          child: const Text('registrar'),
         ),
       ),
-      Visibility(
-        visible: visible,
-        child: ElevatedButton(
-          onPressed: () {
-            // Lógica para crear/actualizar un registro Diary
-            _insertarDatosDiary();
-          },
-          child: const Text('Crear Diary'),
-        ),
-      ),
-    ]);
+    );
   }
 
-  Widget _buildShow(BuildContext context, ServiceDiary diary) {
+  Widget _buildShow(BuildContext context, ServiceDiary serviceDiary) {
     // Widget para mostrar los datos obtenidos de la base de datos
     return Container(
       width: 400,
@@ -145,7 +137,7 @@ class _CrudDiaryState extends State<CrudDiary> {
       padding: const EdgeInsets.all(20),
       child: FutureBuilder<List<MoDiary>>(
         // Lógica para obtener los Diarios y mostrarlos en esta sección
-        future: diary.getDiaries(),
+        future: serviceDiary.getDiaries(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const CircularProgressIndicator();
@@ -160,19 +152,27 @@ class _CrudDiaryState extends State<CrudDiary> {
               itemBuilder: (context, index) {
                 final diary = diaryList[index];
                 return ListTile(
-                  title: TextButton(
-                    onPressed: () {
-                      setState(() {
-                        visible = false;
-                      });
-                    },
+                  leading: SizedBox(
+                    width: 100,
                     child: Row(
                       children: [
                         Text(diary.id.toString()),
+                        const MaxGap(10),
                         Text(diary.userName),
+                        const MaxGap(10),
                         Text(diary.enterCode)
                       ],
                     ),
+                  ),
+                  title: Row(
+                    children: [
+                      TextButton(onPressed: () {}, child: const Text('Update')),
+                      TextButton(
+                          onPressed: () {
+                            serviceDiary.delete(diaryList[index].id);
+                          },
+                          child: const Text('Delete')),
+                    ],
                   ),
                   // Aquí podrías añadir más información del Diary si es necesario
                 );

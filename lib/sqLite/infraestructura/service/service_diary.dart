@@ -9,25 +9,41 @@ class ServiceDiary extends DiaryGateway {
   // Método para convertir un mapa a un objeto ServiceDiary
   MoDiary toObject(Map<String, dynamic> data) {
     return MoDiary(
-        id: data['id'], userName: data['type'], enterCode: data['enterCode']);
+        id: data['id'],
+        userName: data['userName'],
+        enterCode: data['enterCode']);
   }
 
   // Método para convertir un objeto ServiceDiary a un mapa
   Map<String, dynamic> toMap() {
     return {
       'id': moDiary.id,
-      'type': moDiary.userName,
+      'userName': moDiary.userName,
       'enterCode': moDiary.enterCode
     };
   }
 
   // Método para guardar o actualizar un registro en la base de datos
   Future<int> save() async {
-    return await ((moDiary.id <= 0)
-        ? create(toMap())
-        : update(toMap(), moDiary.id));
+    if (moDiary.id <= 0) {
+      return await create(toMap());
+    } else {
+      return await updateOrCreate();
+    }
   }
 
+  Future<int> updateOrCreate() async {
+    var result = await update(toMap(), moDiary.id);
+    if (result == 0) {
+      return await create(
+          toMap()); // Si el update no afecta filas, se crea uno nuevo
+    } else {
+      return result;
+    }
+  }
+
+
+  
   // Método para eliminar un registro de la base de datos
   Future<void> remove() async {
     await delete(moDiary.id);
