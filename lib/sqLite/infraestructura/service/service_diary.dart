@@ -1,6 +1,6 @@
 import 'package:sqllite/sqLite/dominio/gateway/gateway_diary.dart';
 import 'package:sqllite/sqLite/bd_table_base/table_base.dart';
-import 'package:sqllite/sqLite/dominio/models/diary/models_diary.dart';
+import 'package:sqllite/sqLite/dominio/models/models_diary.dart';
 
 class ServiceDiary extends DiaryGateway {
   MoDiary moDiary;

@@ -1,7 +1,7 @@
 // ignore_for_file: use_build_context_synchronously
 
 import 'package:flutter/material.dart';
-import 'package:sqllite/sqLite/dominio/models/diary/models_diary.dart';
+import 'package:sqllite/sqLite/dominio/models/models_diary.dart';
 import 'package:sqllite/sqLite/infraestructura/service/service_diary.dart';
 
 class CrudDiary extends StatefulWidget {
