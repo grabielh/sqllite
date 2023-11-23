@@ -71,10 +71,8 @@ class _CrudDiaryState extends State<CrudDiary> {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
             _buildInput(context, _id, _nameDiary, _password),
-            const SizedBox(height: 20),
             _buildButton(context),
-            const SizedBox(height: 20),
-            _buildShow(context, serviceDiary),
+            _buildShow(context, serviceDiary, _id, _nameDiary, _password),
           ],
         ),
       ),
@@ -99,7 +97,6 @@ class _CrudDiaryState extends State<CrudDiary> {
               decoration: const InputDecoration(labelText: 'userName'),
               keyboardType: TextInputType.name,
             ),
-            const SizedBox(height: 10),
             TextField(
               controller: enterCode,
               decoration: const InputDecoration(labelText: 'enterCode'),
@@ -128,12 +125,17 @@ class _CrudDiaryState extends State<CrudDiary> {
     );
   }
 
-  Widget _buildShow(BuildContext context, ServiceDiary serviceDiary) {
+  Widget _buildShow(
+      BuildContext context,
+      ServiceDiary serviceDiary,
+      TextEditingController id,
+      TextEditingController nameDiary,
+      TextEditingController enterCode) {
     // Widget para mostrar los datos obtenidos de la base de datos
     return Container(
       width: 400,
-      height: 400,
-      alignment: Alignment.center,
+      height: 500,
+      alignment: Alignment.topCenter,
       padding: const EdgeInsets.all(20),
       child: FutureBuilder<List<MoDiary>>(
         // Lógica para obtener los Diarios y mostrarlos en esta sección
@@ -151,30 +153,47 @@ class _CrudDiaryState extends State<CrudDiary> {
               itemCount: diaryList.length,
               itemBuilder: (context, index) {
                 final diary = diaryList[index];
-                return ListTile(
-                  leading: SizedBox(
-                    width: 100,
-                    child: Row(
+                return Card(
+                  child: ListTile(
+                    leading: SizedBox(
+                      width: 100,
+                      child: Row(
+                        children: [
+                          Text(diary.id.toString()),
+                          const MaxGap(10),
+                          Text(diary.userName),
+                          const MaxGap(10),
+                          Text(diary.enterCode)
+                        ],
+                      ),
+                    ),
+                    title: Row(
                       children: [
-                        Text(diary.id.toString()),
-                        const MaxGap(10),
-                        Text(diary.userName),
-                        const MaxGap(10),
-                        Text(diary.enterCode)
+                        TextButton(
+                            onPressed: () {
+                              serviceDiary = ServiceDiary(
+                                moDiary: MoDiary(
+                                    id: diaryList[index].id,
+                                    userName: diaryList[index].userName,
+                                    enterCode: diaryList[index].enterCode),
+                              );
+                              id.text = serviceDiary.moDiary.id.toString();
+                              nameDiary.text = serviceDiary.moDiary.userName;
+                              enterCode.text = serviceDiary.moDiary.enterCode;
+                            },
+                            child: const Text('Update')),
+                        TextButton(
+                            onPressed: () {
+                              serviceDiary.delete(diaryList[index].id);
+                              setState(() {
+                                serviceDiary.getDiaries();
+                              });
+                            },
+                            child: const Text('Delete')),
                       ],
                     ),
+                    // Aquí podrías añadir más información del Diary si es necesario
                   ),
-                  title: Row(
-                    children: [
-                      TextButton(onPressed: () {}, child: const Text('Update')),
-                      TextButton(
-                          onPressed: () {
-                            serviceDiary.delete(diaryList[index].id);
-                          },
-                          child: const Text('Delete')),
-                    ],
-                  ),
-                  // Aquí podrías añadir más información del Diary si es necesario
                 );
               },
             );
